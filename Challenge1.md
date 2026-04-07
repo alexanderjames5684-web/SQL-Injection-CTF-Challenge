@@ -1,57 +1,177 @@
-🔐 SQL Injection Walkthrough: VoltEdge Tracker (CTF Challenge 1) 📌 Challenge Overview
+# 🔐 VoltEdge Tracker – SQL Injection Walkthrough (Challenge 1)
 
-The VoltEdge Tracker asset search application appears simple at first glance, but hints suggest hidden database content. The objective was to determine whether sensitive information could be extracted through SQL injection.
+## 📌 Overview
 
-🔗 Target: https://ctf.kd8bfn.org/sqli/search
+* **Category:** Web Exploitation
+* **Challenge Type:** SQL Injection (SQLi)
+* **Target:** `/sqli/search`
+* **Goal:** Extract sensitive data from the backend database
 
-🧠 Initial Observations
+---
 
-After exploring the application, the About page provided a key clue:
+## 🔍 Recon & Initial Analysis
 
-The system had been migrated from Access DB → SQLite
+The VoltEdge Tracker application provides an asset search feature. At first glance, it appears simple, but further inspection reveals potential vulnerabilities.
 
-This immediately influenced the attack strategy since SQLite uses different schema tables (e.g., sqlite_master instead of information_schema).
+From the **About page**, a critical clue was discovered:
 
-🚨 Identifying the Vulnerability
+> The system was migrated from **Access DB → SQLite**
 
-Testing basic input in the search bar:
+This immediately shaped the attack strategy, since SQLite uses different schema tables (e.g., `sqlite_master` instead of `information_schema`).
 
+---
+
+## 🧪 Step 1 – Identifying the Vulnerability
+
+Testing basic input:
+
+```sql
 '--
+```
 
-Result:
+### Result:
 
-The application returned all records This confirmed a SQL injection vulnerability 🔢 Determining Column Count
+* The application returned **all records**
 
-By analyzing the table output, it was determined that the query returns 6 columns, which is necessary for constructing valid UNION SELECT statements.
+### ✅ Conclusion:
 
-🧪 Crafting the Injection Step 1: Match Column Count
+> The application is vulnerable to **SQL Injection**
 
-To align with the query structure:
+---
 
+## 🔢 Step 2 – Determining Column Count
+
+By analyzing the structure of the returned table, it was determined that the query outputs **6 columns**.
+
+This is critical for constructing valid `UNION SELECT` payloads.
+
+---
+
+## 🧪 Step 3 – Confirming UNION Injection
+
+To match the column count:
+
+```sql
 ' UNION SELECT NULL,NULL,NULL,NULL,NULL,NULL FROM system_config--
+```
 
-This verifies that UNION SELECT is working correctly.
+### Result:
 
-Step 2: Discover Table Structure
+* Query executed successfully
 
-Since SQLite is being used, schema information is stored in sqlite_master.
+### ✅ Conclusion:
 
+> `UNION SELECT` injection is working
+
+---
+
+## 🔍 Step 4 – Enumerating Database Structure
+
+Since the backend is SQLite, schema information is stored in:
+
+```sql
+sqlite_master
+```
+
+### Payload:
+
+```sql
 ' UNION SELECT sql,NULL,NULL,NULL,NULL,NULL FROM sqlite_master WHERE name='system_config'--
+```
 
-This reveals the table structure:
+### Result:
 
-CREATE TABLE system_config ( id INTEGER PRIMARY KEY, config_key TEXT, config_value TEXT ) Step 3: Extract Sensitive Data
+```sql
+CREATE TABLE system_config (
+    id INTEGER PRIMARY KEY,
+    config_key TEXT,
+    config_value TEXT
+)
+```
 
-With column names identified, the next step is to retrieve the contents:
+---
 
-' UNION SELECT config_key,config_value,NULL,NULL,NULL,NULL FROM system_config-- 🎯 Results
+## 🔓 Step 5 – Extracting Sensitive Data
 
-This query exposed several internal configuration values, including:
+With the table structure identified, the next step is to retrieve its contents:
 
-License key Backup schedule Maintenance window Application version 🚩 CTF Flag 🏁 Final Flag CYBR3200{union_select_the_unseen_a7c3} 🧠 Key Takeaways Always check metadata pages (like "About") for hints about backend technologies SQLite requires different enumeration techniques (sqlite_master) Matching column count is critical for successful UNION attacks Misconfigured input validation can expose sensitive internal data Even simple search fields can be high-risk attack vectors 🔐 Security Lessons
+```sql
+' UNION SELECT config_key,config_value,NULL,NULL,NULL,NULL FROM system_config--
+```
+
+### 🎯 Results:
+
+Sensitive internal data was exposed, including:
+
+* License key
+* Backup schedule
+* Maintenance window
+* Application version
+
+---
+
+## 🏁 Flag
+
+```text
+CYBR3200{union_select_the_unseen_a7c3}
+```
+
+---
+
+## 🧠 Key Takeaways
+
+### 🔹 1. Metadata Pages Are Valuable
+
+* The **About page** revealed the database type (SQLite)
+* This directly influenced the attack approach
+
+---
+
+### 🔹 2. SQLite Requires Different Enumeration
+
+* Uses `sqlite_master` instead of `information_schema`
+* Understanding DB-specific behavior is crucial
+
+---
+
+### 🔹 3. Column Count Matters
+
+* Matching the number of columns is required for successful `UNION SELECT`
+
+---
+
+### 🔹 4. Input Validation Failures Are Dangerous
+
+* A simple search field exposed sensitive configuration data
+
+---
+
+## 🔐 Security Lessons
 
 This challenge highlights the importance of:
 
-Using parameterized queries / prepared statements Proper input sanitization Limiting database permissions Avoiding exposure of internal system details in public-facing pages 💭 Final Thoughts
+* Using **parameterized queries / prepared statements**
+* Proper **input validation and sanitization**
+* Limiting **database permissions**
+* Avoiding exposure of **internal system details**
 
-This was a great example of how small clues + methodical testing can lead to full database compromise. Once the database type was identified, the rest became a structured process of enumeration and extraction.
+---
+
+## 💬 Final Thoughts
+
+This challenge demonstrates how:
+
+> Small clues + methodical testing can lead to full database compromise.
+
+Once the database type was identified, the process became a structured sequence of:
+
+* Enumeration
+* Exploitation
+* Data extraction
+
+---
+
+## ✍️ Author
+
+Savannah Holiday
+
