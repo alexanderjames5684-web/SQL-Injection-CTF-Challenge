@@ -236,5 +236,5 @@ Instead of forcing command injection, the solution required:
 
 ## ✍️ Author
 
-*Writeup by Savannah Holiday*
+*Writeup by AJ Flower*
 
