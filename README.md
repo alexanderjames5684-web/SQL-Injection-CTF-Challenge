@@ -8,7 +8,7 @@ Each challenge is documented in its own Markdown file:
 
 * `challenge1.md`
 * `challenge2.md`
-* *(more to be added)*
+* `challenge3.md`
 
 Each writeup includes:
 
