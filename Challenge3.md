@@ -162,9 +162,3 @@ With minimal effort, an attacker can:
 * Access protected files
 * Extract confidential information
 
----
-
-## ✍️ Author
-
-AJ Flower
-
