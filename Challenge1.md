@@ -169,9 +169,3 @@ Once the database type was identified, the process became a structured sequence 
 * Exploitation
 * Data extraction
 
----
-
-## ✍️ Author
-
-Savannah Holiday
-
