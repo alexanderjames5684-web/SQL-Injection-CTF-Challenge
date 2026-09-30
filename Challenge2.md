@@ -232,9 +232,4 @@ Instead of forcing command injection, the solution required:
 * Iterative testing
 * Adapting to constraints
 
----
-
-## ✍️ Author
-
-*Writeup by AJ Flower*
 
