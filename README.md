@@ -44,8 +44,4 @@ Each writeup includes:
 These writeups are for **educational purposes only**.
 All challenges were completed in legal CTF environments.
 
----
 
-## ✍️ Author
-
-AJ Flower
